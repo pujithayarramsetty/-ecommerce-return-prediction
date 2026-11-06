@@ -54,10 +54,14 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
+     
       # 8. Publish Docker image to GHCR
       - name: Publish Docker Image
         if: success()
         run: |
-          IMAGE_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          docker tag ecommerce-return-prediction:latest ghcr.io/${IMAGE_NAME}:latest
-          docker push ghcr.io/${IMAGE_NAME}:latest
+          IMAGE_NAME="ghcr.io/$(echo "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')/ecommerce-return-prediction"
+
+          docker tag ecommerce-return-prediction:latest ${IMAGE_NAME}:latest
+
+          docker push ${IMAGE_NAME}:latest
+
