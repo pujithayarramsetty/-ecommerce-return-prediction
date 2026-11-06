@@ -13,43 +13,48 @@ permissions:
   packages: write
 
 jobs:
-
   build-and-test:
-
     runs-on: ubuntu-latest
 
     steps:
-
+      # 1. Checkout GitHub repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # 2. Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      # 3. Install dependencies
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install -r requirements.txt
 
+      # 4. Validate Python files
       - name: Validate Python Files
         run: |
           python -m py_compile app.py tests/test_app.py
 
+      # 5. Run automated tests
       - name: Run Automated Tests
         run: |
-          pytest -v
+          python -m pytest -v
 
+      # 6. Build Docker image
       - name: Build Docker Image
         run: |
           docker build -t ecommerce-return-prediction:latest .
 
+      # 7. Login to GitHub Container Registry
       - name: Login to GitHub Container Registry
         if: success()
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
 
+      # 8. Publish Docker image to GHCR
       - name: Publish Docker Image
         if: success()
         run: |
