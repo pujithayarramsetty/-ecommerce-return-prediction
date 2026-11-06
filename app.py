@@ -9,7 +9,7 @@ import joblib
 app = FastAPI(
     title="E-Commerce Product Return Prediction API",
     description="Predicts whether an e-commerce product will be returned",
-    version="1.0"
+    version="1.0.1"
 )
 
 # Load trained model and feature names
@@ -38,7 +38,8 @@ class ProductData(BaseModel):
 def health():
     return {
         "status": "healthy",
-        "message": "Product Return Prediction API is running"
+        "message": "Product Return Prediction API is running",
+        "api_version": "1.0.1"
     }
 
 
